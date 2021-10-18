@@ -18,9 +18,9 @@
 	</properties>
 
 	<modules>
-		<module>../domain-model-module</module>
-		<module>../logic-module</module>
-		<module>../module2</module>
+		<module>domain-model-module</module>
+		<module>logic-module</module>
+		<module>module2</module>
 	</modules>
 
 

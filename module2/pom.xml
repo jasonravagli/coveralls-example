@@ -4,6 +4,7 @@
     <groupId>it.jasonravagli.gym</groupId>
     <artifactId>parent-module</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../parent-module</relativePath>
   </parent>
   <artifactId>module2</artifactId>
 </project>

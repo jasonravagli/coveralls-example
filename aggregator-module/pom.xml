@@ -1,0 +1,30 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>it.jasonravagli.gym</groupId>
+  <artifactId>aggregator-module</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <modules>
+    <module>../parent-module</module>
+    <module>../domain-model-module</module>
+    <module>../logic-module</module>
+  </modules>
+
+  <profiles>
+    <profile>
+      <id>jacoco</id>
+      <modules>
+        <module>../report-module</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>coveralls</id>
+      <modules>
+        <module>../report-module</module>
+      </modules>
+    </profile>
+  </profiles>
+</project>

@@ -1,0 +1,88 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>it.jasonravagli.gym</groupId>
+    <artifactId>parent-module</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../parent-module</relativePath>
+  </parent>
+  <artifactId>report-module</artifactId>
+  <packaging>pom</packaging>
+
+  <dependencies>
+    <dependency>
+      <!-- version taken from the parent -->
+      <groupId>${project.groupId}</groupId>
+      <artifactId>logic-module</artifactId>
+    </dependency>
+  </dependencies>
+
+  <profiles>
+    <profile>
+      <id>jacoco</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>report-aggregate</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>report-aggregate</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>coveralls</id>
+      <build>
+        <plugins>
+          <plugin>
+            <!-- JaCoCo report is required by coveralls-maven-plugin -->
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>report-aggregate</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>report-aggregate</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.eluder.coveralls</groupId>
+            <artifactId>coveralls-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <phase>verify</phase>
+                <goals>
+                  <goal>report</goal>
+                </goals>
+              </execution>
+            </executions>
+            <!-- JaCoCo reports are generated from report-aggregate, hence 
+              they are not in the default directory -->
+            <configuration>
+              <jacocoReports>
+                <jacocoReport>${project.reporting.outputDirectory}/jacoco-aggregate/jacoco.xml</jacocoReport>
+              </jacocoReports>
+              <!-- Source files of the modules are not automatically detected -->
+              <sourceDirectories>
+                <sourceDirectory>${project.basedir}/../logic-module/src/main/java</sourceDirectory>
+              </sourceDirectories>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>

@@ -18,7 +18,6 @@
 	</properties>
 
 	<modules>
-		<module>domain-model-module</module>
 		<module>logic-module</module>
 		<module>module2</module>
 	</modules>
@@ -26,11 +25,6 @@
 
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>domain-model-module</artifactId>
-				<version>${domainModel.version}</version>
-			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>logic-module</artifactId>

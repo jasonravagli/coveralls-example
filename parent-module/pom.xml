@@ -17,14 +17,14 @@
 		<assertj.version>3.21.0</assertj.version>
 	</properties>
 
-	<modules>
-		<module>logic-module</module>
-		<module>module2</module>
-	</modules>
-
 
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>domain-model-module</artifactId>
+				<version>${domainModel.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>logic-module</artifactId>
@@ -78,21 +78,8 @@
 					<artifactId>maven-site-plugin</artifactId>
 					<version>3.9.1</version>
 				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-source-plugin</artifactId>
-					<version>3.0.1</version>
-					<executions>
-						<execution>
-							<id>attach-sources</id>
-							<goals>
-								<goal>jar</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
 
-
+				<!-- JACOCO PLUGIN -->
 				<plugin>
 					<groupId>org.jacoco</groupId>
 					<artifactId>jacoco-maven-plugin</artifactId>
@@ -100,13 +87,13 @@
 					<executions>
 						<execution>
 							<goals>
-								<!-- binds by default to the phase "initialize" -->
 								<goal>prepare-agent</goal>
 								<goal>report</goal>
 							</goals>
 						</execution>
 					</executions>
 				</plugin>
+				<!-- COVERALLS PLUGIN -->
 				<plugin>
 					<groupId>org.eluder.coveralls</groupId>
 					<artifactId>coveralls-maven-plugin</artifactId>
@@ -120,24 +107,29 @@
 							<version>2.3.1</version>
 						</dependency>
 					</dependencies>
+				</plugin>
+				<!-- PIT PLUGIN -->
+				<plugin>
+					<groupId>org.pitest</groupId>
+					<artifactId>pitest-maven</artifactId>
+					<version>1.7.2</version>
 					<executions>
 						<execution>
-							<phase>verify</phase>
+							<phase>test</phase>
 							<goals>
-								<goal>report</goal>
+								<goal>mutationCoverage</goal>
 							</goals>
 						</execution>
 					</executions>
+					<configuration>
+						<mutators>
+							<mutator>STRONGER</mutator>
+						</mutators>
+						<mutationThreshold>100</mutationThreshold>
+					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
-
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-			</plugin>
-		</plugins>
 	</build>
 
 	<profiles>
@@ -160,9 +152,16 @@
 						<groupId>org.jacoco</groupId>
 						<artifactId>jacoco-maven-plugin</artifactId>
 					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>pit</id>
+			<build>
+				<plugins>
 					<plugin>
-						<groupId>org.eluder.coveralls</groupId>
-						<artifactId>coveralls-maven-plugin</artifactId>
+						<groupId>org.pitest</groupId>
+						<artifactId>pitest-maven</artifactId>
 					</plugin>
 				</plugins>
 			</build>

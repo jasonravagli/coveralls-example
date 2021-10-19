@@ -17,6 +17,7 @@
 	<properties>
 		
 		<!-- SONARQUBE CONFIGURATION -->
+		<sonar.projectKey>jasonravagli_coveralls-example</sonar.projectKey>
 		<!-- Exclude the domain model from code coverage -->
 		<sonar.coverage.exclusions>
 			**/domain-model-module/**

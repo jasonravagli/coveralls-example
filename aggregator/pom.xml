@@ -1,0 +1,86 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>it.jasonravagli.gym</groupId>
+	<artifactId>aggregator</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>gym-manager</name>
+
+	<modules>
+		<module>../parent</module>
+		<module>../domain-model</module>
+		<module>../logic</module>
+	</modules>
+
+	<properties>
+		<!-- SONARQUBE CONFIGURATION -->
+		<sonar.projectKey>default-project</sonar.projectKey>
+		<!-- Exclude the domain model from code coverage -->
+		<sonar.coverage.exclusions>
+			**/domain-model/**
+		</sonar.coverage.exclusions>
+		<!-- Rule exclusions -->
+		<!-- Ignore Subclasses that add fields should override "equals" for domain 
+			model classes -->
+		<sonar.issue.ignore.multicriteria>e11</sonar.issue.ignore.multicriteria>
+		<sonar.issue.ignore.multicriteria.e11.ruleKey>
+			java:S2160
+		</sonar.issue.ignore.multicriteria.e11.ruleKey>
+		<sonar.issue.ignore.multicriteria.e11.resourceKey>
+			**/domain-model/**/*.java
+		</sonar.issue.ignore.multicriteria.e11.resourceKey>
+	</properties>
+
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<!-- SONARQUBE PLUGIN -->
+				<!-- SonarQube is meant to be used from the root context of the build, 
+					hence must be configured in the aggregator project -->
+				<plugin>
+					<groupId>org.sonarsource.scanner.maven</groupId>
+					<artifactId>sonar-maven-plugin</artifactId>
+					<version>3.9.0.2155</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>jacoco</id>
+			<modules>
+				<module>../report</module>
+			</modules>
+		</profile>
+		<profile>
+			<id>coveralls</id>
+			<modules>
+				<module>../report</module>
+			</modules>
+		</profile>
+		<profile>
+			<id>sonar</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.sonarsource.scanner.maven</groupId>
+						<artifactId>sonar-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>verify</phase>
+								<goals>
+									<goal>sonar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>

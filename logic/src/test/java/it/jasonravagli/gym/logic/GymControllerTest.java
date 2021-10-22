@@ -56,11 +56,6 @@ public class GymControllerTest {
 	public void releaseMocks() throws Exception {
 		closeable.close();
 	}
-	
-	@Test
-	public void fakeTest() {
-		fail();
-	}
 
 	@Test
 	public void testAllMembersWhenEverythingOk() {

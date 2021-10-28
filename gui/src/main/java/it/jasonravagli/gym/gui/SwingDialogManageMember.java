@@ -150,7 +150,7 @@ public class SwingDialogManageMember extends JDialog implements DialogManageMemb
 	@Override
 	public void memberAdded(Member member) {
 		result = DialogResult.OK;
-		dispose();
+		setVisible(false);
 	}
 
 	@Override
@@ -161,7 +161,7 @@ public class SwingDialogManageMember extends JDialog implements DialogManageMemb
 	@Override
 	public void memberUpdated(Member updatedMember) {
 		result = DialogResult.OK;
-		dispose();
+		setVisible(false);
 	}
 
 	@Override

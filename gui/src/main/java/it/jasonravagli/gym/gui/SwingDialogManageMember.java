@@ -98,7 +98,7 @@ public class SwingDialogManageMember extends JDialog implements DialogManageMemb
 		JButton buttonCancel = new JButton("Cancel");
 		buttonCancel.addActionListener(e -> {
 			result = DialogResult.CANCEL;
-			dispose();
+			setVisible(false);
 		});
 		buttonCancel.setName("buttonCancel");
 		buttonCancel.setActionCommand("Cancel");

@@ -12,10 +12,16 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 
-		<domainModel.version>1.1</domainModel.version>
+		<domainModel.version>1.2</domainModel.version>
 		<junit.version>4.13.2</junit.version>
-		<assertj.version>3.21.0</assertj.version>
+		<assertj-swing.version>3.17.1</assertj-swing.version>
 		<mockito.version>4.0.0</mockito.version>
+		<mongo.version>3.12.10</mongo.version>
+		<miglayout.version>5.3</miglayout.version>
+		<lgooddatepicker.version>11.2.1</lgooddatepicker.version>
+		<awaitility.version>4.0.2</awaitility.version>
+
+		<docker.image.mongo>mongo:5.0.3</docker.image.mongo>
 	</properties>
 
 
@@ -31,6 +37,33 @@
 				<artifactId>logic</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>mongodb</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>gui</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.mongodb</groupId>
+				<artifactId>mongo-java-driver</artifactId>
+				<version>${mongo.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.miglayout</groupId>
+				<artifactId>miglayout-swing</artifactId>
+				<version>${miglayout.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.github.lgooddatepicker</groupId>
+				<artifactId>LGoodDatePicker</artifactId>
+				<version>${lgooddatepicker.version}</version>
+			</dependency>
+
 
 			<!-- TEST DEPENDENCIES -->
 			<dependency>
@@ -40,15 +73,21 @@
 				<scope>test</scope>
 			</dependency>
 			<dependency>
-				<groupId>org.assertj</groupId>
-				<artifactId>assertj-core</artifactId>
-				<version>${assertj.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
 				<groupId>org.mockito</groupId>
 				<artifactId>mockito-core</artifactId>
 				<version>${mockito.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.assertj</groupId>
+				<artifactId>assertj-swing-junit</artifactId>
+				<version>${assertj-swing.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.awaitility</groupId>
+				<artifactId>awaitility</artifactId>
+				<version>${awaitility.version}</version>
 				<scope>test</scope>
 			</dependency>
 		</dependencies>
@@ -61,7 +100,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.assertj</groupId>
-			<artifactId>assertj-core</artifactId>
+			<artifactId>assertj-swing-junit</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
@@ -72,7 +111,7 @@
 	<build>
 		<pluginManagement>
 			<plugins>
-				<!-- Lock Maven default plugins version -->
+				<!-- Lock Maven plugins version -->
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.8.1</version>
@@ -89,6 +128,19 @@
 					<artifactId>maven-site-plugin</artifactId>
 					<version>3.9.1</version>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-failsafe-plugin</artifactId>
+					<version>2.22.1</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>integration-test</goal>
+								<goal>verify</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
 
 				<!-- JACOCO PLUGIN -->
 				<plugin>
@@ -103,6 +155,15 @@
 							</goals>
 						</execution>
 					</executions>
+
+					<!-- Exclude class without logic from the coverage -->
+					<configuration>
+						<excludes>
+							<exclude>**/TransactionException.*</exclude>
+							<exclude>**/MongoRepositoryProvider.*</exclude>
+							<exclude>**/gui/**/SimpleDocumentListener.*</exclude>
+						</excludes>
+					</configuration>
 				</plugin>
 				<!-- COVERALLS PLUGIN -->
 				<plugin>
@@ -139,8 +200,46 @@
 						<mutationThreshold>100</mutationThreshold>
 					</configuration>
 				</plugin>
+				<!-- BUILD HELPER PLUGIN -->
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>build-helper-maven-plugin</artifactId>
+					<version>3.2.0</version>
+					<executions>
+						<execution>
+							<id>add-test-source</id>
+							<phase>generate-test-sources</phase>
+							<goals>
+								<goal>add-test-source</goal>
+							</goals>
+							<configuration>
+								<sources>
+									<source>src/it/java</source>
+								</sources>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<!-- DOCKER PLUGIN -->
+				<plugin>
+					<groupId>io.fabric8</groupId>
+					<artifactId>docker-maven-plugin</artifactId>
+					<version>0.34.1</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
+
+		<!-- Enabled plugins -->
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
 	</build>
 
 	<profiles>

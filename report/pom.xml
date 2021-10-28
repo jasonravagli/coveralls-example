@@ -13,9 +13,17 @@
 
 	<dependencies>
 		<dependency>
-			<!-- version taken from the parent -->
+			<!-- versions taken from the parent -->
 			<groupId>${project.groupId}</groupId>
 			<artifactId>logic</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>mongodb</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>gui</artifactId>
 		</dependency>
 	</dependencies>
 
@@ -76,6 +84,8 @@
 							<!-- Source files of the modules are not automatically detected -->
 							<sourceDirectories>
 								<sourceDirectory>${project.basedir}/../logic/src/main/java</sourceDirectory>
+								<sourceDirectory>${project.basedir}/../mongodb/src/main/java</sourceDirectory>
+								<sourceDirectory>${project.basedir}/../gui/src/main/java</sourceDirectory>
 							</sourceDirectories>
 						</configuration>
 					</plugin>

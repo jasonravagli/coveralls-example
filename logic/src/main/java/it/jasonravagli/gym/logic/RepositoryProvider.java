@@ -1,24 +1,9 @@
 package it.jasonravagli.gym.logic;
 
-public class RepositoryProvider {
+public interface RepositoryProvider {
 
-	private MemberRepository memberRepository;
-	private CourseRepository courseRepository;
+	public MemberRepository getMemberRepository();
 
-	public MemberRepository getMemberRepository() {
-		return memberRepository;
-	}
-
-	public void setMemberRepository(MemberRepository memberRepository) {
-		this.memberRepository = memberRepository;
-	}
-
-	public CourseRepository getCourseRepository() {
-		return courseRepository;
-	}
-
-	public void setCourseRepository(CourseRepository courseRepository) {
-		this.courseRepository = courseRepository;
-	}
+	public CourseRepository getCourseRepository();
 
 }

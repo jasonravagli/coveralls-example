@@ -33,7 +33,7 @@ jobs:
         restore-keys: ${{ runner.os }}-m2-jdk11-
     - name: Build with Maven
       run: >
-        mvn install -Pcoveralls,pit
+        xvfb-run mvn install -Pcoveralls,pit
         -DrepoToken=$COVERALLS_TOKEN -DpullRequest=${{ github.event.pull_request.number }}
       working-directory: ${{ env.workdir }}
     - name: Generate JUnit Report

@@ -1,6 +1,7 @@
 package it.jasonravagli.gym.model;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Member extends BaseEntity {
 	private String name;
@@ -34,5 +35,26 @@ public class Member extends BaseEntity {
 	@Override
 	public String toString() {
 		return surname + " " + name + " - " + dateOfBirth;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(dateOfBirth, name, surname);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Member other = (Member) obj;
+		return Objects.equals(getId(), other.getId()) && Objects.equals(dateOfBirth, other.dateOfBirth) && Objects.equals(name, other.name)
+				&& Objects.equals(surname, other.surname);
 	}
 }

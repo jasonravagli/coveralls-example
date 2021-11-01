@@ -4,8 +4,10 @@ import it.jasonravagli.gym.logic.GymView;
 import it.jasonravagli.gym.model.Member;
 
 public interface DialogManageMember extends GymView {
+
+	void setMember(Member member);
 	
 	DialogResult showDialog();
 	
-	void setMember(Member member);
+	void setModalState(boolean modal);
 }

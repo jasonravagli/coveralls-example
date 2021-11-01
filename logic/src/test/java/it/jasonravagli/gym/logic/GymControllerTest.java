@@ -49,7 +49,7 @@ public class GymControllerTest {
 		closeable = MockitoAnnotations.openMocks(this);
 
 		gymController = new GymController();
-		gymController.setTransactoinManager(transactionManager);
+		gymController.setTransactionManager(transactionManager);
 		gymController.setView(gymView);
 
 		when(repositoryProvider.getMemberRepository()).thenReturn(memberRepository);

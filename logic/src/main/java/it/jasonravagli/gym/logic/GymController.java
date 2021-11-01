@@ -15,7 +15,7 @@ public class GymController {
 	private GymView gymView;
 	private TransactionManager transactionManager;
 	
-	public void setTransactoinManager(TransactionManager transactionManager) {
+	public void setTransactionManager(TransactionManager transactionManager) {
 		this.transactionManager = transactionManager;
 	}
 	

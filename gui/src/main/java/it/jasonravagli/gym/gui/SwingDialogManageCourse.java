@@ -5,49 +5,44 @@ import java.awt.FlowLayout;
 import java.util.List;
 
 import javax.swing.JButton;
-import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
-import com.github.lgooddatepicker.components.DatePicker;
-import com.github.lgooddatepicker.components.DatePickerSettings;
-
 import it.jasonravagli.gym.logic.GymController;
 import it.jasonravagli.gym.model.Course;
 import it.jasonravagli.gym.model.Member;
 import net.miginfocom.swing.MigLayout;
 
-public class SwingDialogManageMember extends JDialog implements DialogManageMember {
+public class SwingDialogManageCourse extends JFrame implements DialogManageCourse {
 
-	private static final long serialVersionUID = -7493514996863733430L;
+	private static final long serialVersionUID = 6456331125860029244L;
 	private static final String UNSUPPORTED_OP_MESSAGE = "Operation not supported";
 
 	private final JPanel contentPanel = new JPanel();
 
 	private JTextField textFieldId;
 	private JTextField textFieldName;
-	private JTextField textFieldSurname;
-	private DatePicker datePickerBirth;
 	private DialogResult result;
 
-	private transient Member member;
+	private transient Course course;
 
 	private JButton buttonOk;
 
 	private JLabel labelError;
 
-	public SwingDialogManageMember(GymController controller) {
+	public SwingDialogManageCourse(GymController controller) {
 		setDefaultCloseOperation(HIDE_ON_CLOSE);
-		setBounds(100, 100, 465, 300);
+		setBounds(100, 100, 380, 191);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(new MigLayout("fill",
 				"[grow,sizegroup col-s,left][grow,sizegroup col,center][grow,sizegroup col,center]",
-				"[grow,sizegroup row][grow,sizegroup row][grow,sizegroup row][grow,sizegroup row][grow,sizegroup row-s]"));
+				"[grow,sizegroup row][grow,sizegroup row][grow,sizegroup row-s]"));
 
 		JLabel lblNewLabel = new JLabel("Id:");
 		contentPanel.add(lblNewLabel, "cell 0 0,alignx trailing");
@@ -63,33 +58,14 @@ public class SwingDialogManageMember extends JDialog implements DialogManageMemb
 
 		textFieldName = new JTextField();
 		textFieldName.setName("textFieldName");
-		textFieldName.getDocument().addDocumentListener((SimpleDocumentListener) e -> updateButtonOkState());
+		textFieldName.getDocument().addDocumentListener(
+				(SimpleDocumentListener) e -> buttonOk.setEnabled(!textFieldName.getText().trim().isEmpty()));
 		contentPanel.add(textFieldName, "cell 1 1 2 1,growx");
 		textFieldName.setColumns(10);
 
-		JLabel lblNewLabel_2 = new JLabel("Surname:");
-		contentPanel.add(lblNewLabel_2, "cell 0 2,alignx trailing");
-
-		textFieldSurname = new JTextField();
-		textFieldSurname.setName("textFieldSurname");
-		textFieldSurname.getDocument().addDocumentListener((SimpleDocumentListener) e -> updateButtonOkState());
-		contentPanel.add(textFieldSurname, "cell 1 2 2 1,growx");
-		textFieldSurname.setColumns(10);
-
-		JLabel lblNewLabel_3 = new JLabel("Date of birth:");
-		contentPanel.add(lblNewLabel_3, "cell 0 3,alignx trailing");
-
-		DatePickerSettings settings = new DatePickerSettings();
-		settings.setAllowKeyboardEditing(false);
-		settings.setAllowEmptyDates(false);
-		datePickerBirth = new DatePicker(settings);
-		datePickerBirth.setName("datePickerBirth");
-		datePickerBirth.setDateToToday();
-		contentPanel.add(datePickerBirth, "cell 1 3 2 1,growx");
-
 		labelError = new JLabel(" ");
 		labelError.setName("labelError");
-		contentPanel.add(labelError, "cell 1 4");
+		contentPanel.add(labelError, "cell 1 2");
 
 		JPanel buttonPane = new JPanel();
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -105,25 +81,19 @@ public class SwingDialogManageMember extends JDialog implements DialogManageMemb
 		buttonOk.addActionListener(e -> {
 			labelError.setText(" ");
 
-			Member newMember = new Member();
-			newMember.setName(textFieldName.getText().trim());
-			newMember.setSurname(textFieldSurname.getText().trim());
-			newMember.setDateOfBirth(datePickerBirth.getDate());
-			if (member == null) {
-				controller.addMember(newMember);
+			Course newCourse = new Course();
+			newCourse.setName(textFieldName.getText().trim());
+			if (course == null) {
+				controller.addCourse(newCourse);
 			} else {
-				newMember.setId(member.getId());
-				controller.updateMember(newMember);
+				newCourse.setId(course.getId());
+				controller.updateCourse(newCourse);
 			}
 		});
 		buttonOk.setEnabled(false);
 		buttonOk.setName("buttonOk");
 		buttonPane.add(buttonOk);
 		getRootPane().setDefaultButton(buttonOk);
-	}
-
-	private void updateButtonOkState() {
-		buttonOk.setEnabled(!textFieldName.getText().trim().isEmpty() && !textFieldSurname.getText().trim().isEmpty());
 	}
 
 	@Override
@@ -143,8 +113,7 @@ public class SwingDialogManageMember extends JDialog implements DialogManageMemb
 
 	@Override
 	public void memberAdded(Member member) {
-		result = DialogResult.OK;
-		setVisible(false);
+		throw new UnsupportedOperationException(UNSUPPORTED_OP_MESSAGE);
 	}
 
 	@Override
@@ -154,13 +123,13 @@ public class SwingDialogManageMember extends JDialog implements DialogManageMemb
 
 	@Override
 	public void memberUpdated(Member updatedMember) {
-		result = DialogResult.OK;
-		setVisible(false);
+		throw new UnsupportedOperationException(UNSUPPORTED_OP_MESSAGE);
 	}
 
 	@Override
 	public void courseAdded(Course course) {
-		throw new UnsupportedOperationException(UNSUPPORTED_OP_MESSAGE);
+		result = DialogResult.OK;
+		setVisible(false);
 	}
 
 	@Override
@@ -170,38 +139,32 @@ public class SwingDialogManageMember extends JDialog implements DialogManageMemb
 
 	@Override
 	public void courseUpdated(Course updatedCourse) {
-		throw new UnsupportedOperationException(UNSUPPORTED_OP_MESSAGE);
+		result = DialogResult.OK;
+		setVisible(false);
 	}
 
 	@Override
 	public DialogResult showDialog() {
 		result = DialogResult.CANCEL;
 
-		if (member == null) {
-			textFieldId.setText("- Autogenerated -");
-			textFieldName.setText("");
-			textFieldSurname.setText("");
-			datePickerBirth.setDateToToday();
-		} else {
-			textFieldId.setText(member.getId().toString());
-			textFieldName.setText(member.getName());
-			textFieldSurname.setText(member.getSurname());
-			datePickerBirth.setDate(member.getDateOfBirth());
-		}
-		
-		setVisible(true);
+		SwingUtilities.invokeLater(() -> {
+			if (course == null) {
+				textFieldId.setText("- Autogenerated -");
+				textFieldName.setText("");
+			} else {
+				textFieldId.setText(course.getId().toString());
+				textFieldName.setText(course.getName());
+			}
+
+			setVisible(true);
+		});
 
 		return result;
 	}
 
 	@Override
-	public void setModalState(boolean modal) {
-		setModal(true);
-	}
-
-	@Override
-	public void setMember(Member member) {
-		this.member = member;
+	public void setCourse(Course course) {
+		this.course = course;
 	}
 
 	/*

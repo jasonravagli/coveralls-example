@@ -53,6 +53,8 @@ public class SwingDialogManageSubsTest extends AssertJSwingJUnitTestCase {
 
 		dialogFixture = new DialogFixture(robot(), dialogManageSubs);
 		dialogFixture.show();
+		
+		Thread.sleep(1000);
 	}
 
 	@Override

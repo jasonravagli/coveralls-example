@@ -54,6 +54,8 @@ public class SwingDialogManageCourseTest extends AssertJSwingJUnitTestCase {
 
 		dialogFixture = new DialogFixture(robot(), dialogManageCourse);
 		dialogFixture.show();
+		
+		Thread.sleep(1000);
 	}
 
 	@Override

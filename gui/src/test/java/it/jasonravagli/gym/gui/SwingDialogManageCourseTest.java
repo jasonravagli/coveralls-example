@@ -15,6 +15,7 @@ import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.DialogFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -29,6 +30,9 @@ import it.jasonravagli.gym.model.Member;
 @RunWith(GUITestRunner.class)
 public class SwingDialogManageCourseTest extends AssertJSwingJUnitTestCase {
 
+	@Rule
+	public RetryRule retry = new RetryRule(3);
+	
 	private static final String UNSUPPORTED_OP_MESSAGE = "Operation not supported";
 
 	AutoCloseable autoCloseable;
@@ -54,8 +58,6 @@ public class SwingDialogManageCourseTest extends AssertJSwingJUnitTestCase {
 
 		dialogFixture = new DialogFixture(robot(), dialogManageCourse);
 		dialogFixture.show();
-		
-		Thread.sleep(1000);
 	}
 
 	@Override

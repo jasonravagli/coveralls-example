@@ -20,7 +20,7 @@
 		<miglayout.version>5.3</miglayout.version>
 		<lgooddatepicker.version>11.2.1</lgooddatepicker.version>
 		<apache-commons-lang.commons>3.12.0</apache-commons-lang.commons>
-		<log4j.version>1.2.17</log4j.version>
+		<log4j.version>2.14.1</log4j.version>
 
 		<docker.image.mongo>mongo:5.0.3</docker.image.mongo>
 	</properties>
@@ -92,10 +92,11 @@
 				<scope>test</scope>
 			</dependency>
 			<dependency>
-				<groupId>log4j</groupId>
-				<artifactId>log4j</artifactId>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-bom</artifactId>
 				<version>${log4j.version}</version>
-				<scope>test</scope>
+				<scope>import</scope>
+				<type>pom</type>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

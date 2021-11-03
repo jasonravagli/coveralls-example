@@ -14,8 +14,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: ubuntu-20.04
-            java: 8
           - os: macos-11
             java: 8
           - os: windows-2019

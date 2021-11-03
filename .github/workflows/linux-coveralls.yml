@@ -1,7 +1,6 @@
 name: CI with Maven, Coveralls, and PIT on Linux
 
 on:
-  push:
   pull_request:
 
 jobs:

@@ -1,5 +1,7 @@
 package it.jasonravagli.gym.gui;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
@@ -7,6 +9,9 @@ import org.junit.runners.model.Statement;
 import com.privatejgoodies.common.base.SystemUtils;
 
 public class RetryOnUbuntuRule implements TestRule {
+	
+	private static final Logger LOGGER = LogManager.getLogger(RetryOnUbuntuRule.class);
+	
     private int retryCount;
 
     public RetryOnUbuntuRule(int retryCount) {
@@ -31,10 +36,11 @@ public class RetryOnUbuntuRule implements TestRule {
 	                        return;
 	                    } catch (Throwable t) {
 	                        caughtThrowable = t;
-	                        System.err.println(description.getDisplayName() + ": run " + (i+1) + " failed");
+	                        LOGGER.warn(description.getDisplayName() + " - " + description.getMethodName() + ": run " + (i+1) + " failed");
+	                        LOGGER.warn("Error: " + t.getMessage());
 	                    }
 	                }
-	                System.err.println(description.getDisplayName() + ": giving up after " + retryCount + " failures");
+	                LOGGER.error(description.getDisplayName() + " - " + description.getMethodName() + " : giving up after " + retryCount + " failures");
 	                throw caughtThrowable;
                 }
                 else {

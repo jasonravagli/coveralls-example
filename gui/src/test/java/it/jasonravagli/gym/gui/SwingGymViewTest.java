@@ -3,7 +3,6 @@ package it.jasonravagli.gym.gui;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -139,12 +138,13 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 	@Test
 	@GUITest
-	public void testButtonAddMemberWhenClickedShouldChangeControllerViewAndShowDialogManageMember() {
+	public void testButtonAddMemberWhenClickedShouldChangeControllerViewAndShowModalDialogManageMember() {
 		resetControllerMockInvocations();
 		window.button("buttonAddMember").click();
 
 		InOrder inOrder = Mockito.inOrder(dialogManageMember, controller);
 		inOrder.verify(controller).setView(dialogManageMember);
+		inOrder.verify(dialogManageMember).setModalState(true);
 		inOrder.verify(dialogManageMember).showDialog();
 	}
 
@@ -158,6 +158,7 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 		InOrder inOrder = Mockito.inOrder(dialogManageMember, controller);
 		inOrder.verify(dialogManageMember).showDialog();
+		inOrder.verify(dialogManageMember).setModalState(false);
 		inOrder.verify(controller).setView(swingGymView);
 		inOrder.verify(controller).allMembers();
 	}
@@ -172,13 +173,14 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 		InOrder inOrder = Mockito.inOrder(dialogManageMember, controller);
 		inOrder.verify(dialogManageMember).showDialog();
+		inOrder.verify(dialogManageMember).setModalState(false);
 		inOrder.verify(controller).setView(swingGymView);
 		inOrder.verifyNoMoreInteractions();
 	}
 
 	@Test
 	@GUITest
-	public void testButtonUpdateMemberWhenClickedShouldChangeControllerViewAndPassSelectedMemberToDialogManageMemberAndShow() {
+	public void testButtonUpdateMemberWhenClickedShouldChangeControllerViewAndSetupAndShowDialog() {
 		resetControllerMockInvocations();
 		JListFixture listMembers = window.list("listMembers");
 		Member member = createTestMember("test-name", "test-surname", LocalDate.of(1996, 4, 30));
@@ -190,6 +192,7 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 		InOrder inOrder = Mockito.inOrder(controller, dialogManageMember);
 		inOrder.verify(controller).setView(dialogManageMember);
 		inOrder.verify(dialogManageMember).setMember(member);
+		inOrder.verify(dialogManageMember).setModalState(true);
 		inOrder.verify(dialogManageMember).showDialog();
 	}
 
@@ -207,6 +210,7 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 		InOrder inOrder = Mockito.inOrder(controller, dialogManageMember);
 		inOrder.verify(dialogManageMember).showDialog();
+		inOrder.verify(dialogManageMember).setModalState(false);
 		inOrder.verify(controller).setView(swingGymView);
 		inOrder.verify(controller).allMembers();
 	}
@@ -225,6 +229,7 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 		InOrder inOrder = Mockito.inOrder(controller, dialogManageMember);
 		inOrder.verify(dialogManageMember).showDialog();
+		inOrder.verify(dialogManageMember).setModalState(false);
 		inOrder.verify(controller).setView(swingGymView);
 		inOrder.verifyNoMoreInteractions();
 	}
@@ -254,7 +259,7 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 	@Test
 	@GUITest
-	public void testButtonAddCourseWhenClickedShouldChangeControllerViewAndShowDialogManageCourse() {
+	public void testButtonAddCourseWhenClickedShouldChangeControllerViewAndShowModalDialogManageCourse() {
 		window.tabbedPane("tabbedPaneMain").selectTab("Courses");
 		resetControllerMockInvocations();
 
@@ -262,6 +267,7 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 		InOrder inOrder = Mockito.inOrder(controller, dialogManageCourse);
 		inOrder.verify(controller).setView(dialogManageCourse);
+		inOrder.verify(dialogManageCourse).setModalState(true);
 		inOrder.verify(dialogManageCourse).showDialog();
 	}
 
@@ -276,6 +282,7 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 		InOrder inOrder = Mockito.inOrder(dialogManageCourse, controller);
 		inOrder.verify(dialogManageCourse).showDialog();
+		inOrder.verify(dialogManageCourse).setModalState(false);
 		inOrder.verify(controller).setView(swingGymView);
 		inOrder.verify(controller).allCourses();
 	}
@@ -291,13 +298,14 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 		InOrder inOrder = Mockito.inOrder(dialogManageCourse, controller);
 		inOrder.verify(dialogManageCourse).showDialog();
+		inOrder.verify(dialogManageCourse).setModalState(false);
 		inOrder.verify(controller).setView(swingGymView);
 		inOrder.verifyNoMoreInteractions();
 	}
 
 	@Test
 	@GUITest
-	public void testButtonUpdateCourseWhenClickedShouldChangelControllerViewAndPassSelecteCourseToDialogManageCourseAndShow() {
+	public void testButtonUpdateCourseWhenClickedShouldChangeControllerViewAndSetupAndShowDialog() {
 		window.tabbedPane("tabbedPaneMain").selectTab("Courses");
 		resetControllerMockInvocations();
 		Course course = createTestCourse("test-name");
@@ -309,6 +317,7 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 		InOrder inOrder = Mockito.inOrder(controller, dialogManageCourse);
 		inOrder.verify(controller).setView(dialogManageCourse);
 		inOrder.verify(dialogManageCourse).setCourse(course);
+		inOrder.verify(dialogManageCourse).setModalState(true);
 		inOrder.verify(dialogManageCourse).showDialog();
 	}
 
@@ -325,6 +334,7 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 		InOrder inOrder = Mockito.inOrder(controller, dialogManageCourse);
 		inOrder.verify(dialogManageCourse).showDialog();
+		inOrder.verify(dialogManageCourse).setModalState(false);
 		inOrder.verify(controller).setView(swingGymView);
 		inOrder.verify(controller).allCourses();
 	}
@@ -342,6 +352,7 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 		InOrder inOrder = Mockito.inOrder(controller, dialogManageCourse);
 		inOrder.verify(dialogManageCourse).showDialog();
+		inOrder.verify(dialogManageCourse).setModalState(false);
 		inOrder.verify(controller).setView(swingGymView);
 		inOrder.verifyNoMoreInteractions();
 	}
@@ -372,7 +383,7 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 	@Test
 	@GUITest
-	public void testButtonManageSubsWhenClickedShouldPassSelectedCourseToDialogManageSubsAndShow() {
+	public void testButtonManageSubsWhenClickedShouldChangeControllerViewAndSetupAndShowDialog() {
 		window.tabbedPane("tabbedPaneMain").selectTab("Courses");
 		resetControllerMockInvocations();
 		Course course = createTestCourse("test-name");
@@ -381,8 +392,10 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 		window.button("buttonManageSubs").click();
 
-		InOrder inOrder = Mockito.inOrder(dialogManageSubs);
+		InOrder inOrder = Mockito.inOrder(controller, dialogManageSubs);
+		inOrder.verify(controller).setView(dialogManageSubs);
 		inOrder.verify(dialogManageSubs).setCourse(course);
+		inOrder.verify(dialogManageSubs).setModalState(true);
 		inOrder.verify(dialogManageSubs).showDialog();
 	}
 
@@ -397,7 +410,11 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 		window.button("buttonManageSubs").click();
 
-		verify(controller).allCourses();
+		InOrder inOrder = Mockito.inOrder(controller, dialogManageSubs);
+		inOrder.verify(dialogManageSubs).showDialog();
+		inOrder.verify(dialogManageSubs).setModalState(false);
+		inOrder.verify(controller).setView(swingGymView);
+		inOrder.verify(controller).allCourses();
 	}
 
 	@Test
@@ -411,7 +428,11 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 		window.button("buttonManageSubs").click();
 
-		verifyNoInteractions(controller);
+		InOrder inOrder = Mockito.inOrder(controller, dialogManageSubs);
+		inOrder.verify(dialogManageSubs).showDialog();
+		inOrder.verify(dialogManageSubs).setModalState(false);
+		inOrder.verify(controller).setView(swingGymView);
+		inOrder.verifyNoMoreInteractions();
 	}
 
 	@Test

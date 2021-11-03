@@ -76,7 +76,9 @@ public class SwingGymView extends JFrame implements GymView {
 			controller.setView(dialogManageMember);
 			dialogManageMember.setMember(listMembers.getSelectedValue());
 			
+			dialogManageMember.setModalState(true);
 			DialogResult dialogResult = dialogManageMember.showDialog();
+			dialogManageMember.setModalState(false);
 			controller.setView(this);
 			
 			if (dialogResult == DialogResult.OK)
@@ -102,6 +104,7 @@ public class SwingGymView extends JFrame implements GymView {
 			
 			dialogManageMember.setModalState(true);
 			DialogResult result = dialogManageMember.showDialog();
+			dialogManageMember.setModalState(false);
 			controller.setView(this);
 			
 			if (result == DialogResult.OK)
@@ -131,7 +134,9 @@ public class SwingGymView extends JFrame implements GymView {
 			controller.setView(dialogManageCourse);
 			dialogManageCourse.setCourse(listCourses.getSelectedValue());
 			
+			dialogManageCourse.setModalState(true);
 			DialogResult dialogResult = dialogManageCourse.showDialog();
+			dialogManageCourse.setModalState(false);
 			controller.setView(this);
 			
 			if (dialogResult == DialogResult.OK)
@@ -145,7 +150,9 @@ public class SwingGymView extends JFrame implements GymView {
 		buttonAddCourse.addActionListener(e -> {
 			controller.setView(dialogManageCourse);
 			
+			dialogManageCourse.setModalState(true);
 			DialogResult result = dialogManageCourse.showDialog();
+			dialogManageCourse.setModalState(false);
 			controller.setView(this);
 			
 			if (result == DialogResult.OK)
@@ -156,8 +163,15 @@ public class SwingGymView extends JFrame implements GymView {
 
 		JButton buttonManageSubs = new JButton("Manage Subs.");
 		buttonManageSubs.addActionListener(e -> {
+			controller.setView(dialogManageSubs);
 			dialogManageSubs.setCourse(listCourses.getSelectedValue());
-			if (dialogManageSubs.showDialog() == DialogResult.OK)
+			
+			dialogManageSubs.setModalState(true);
+			DialogResult result = dialogManageSubs.showDialog();
+			dialogManageSubs.setModalState(false);
+			controller.setView(this);
+			
+			if (result == DialogResult.OK)
 				controller.allCourses();
 		});
 		buttonManageSubs.setEnabled(false);

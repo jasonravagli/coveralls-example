@@ -8,4 +8,6 @@ public interface DialogManageCourse extends GymView {
 	void setCourse(Course course);
 
 	DialogResult showDialog();
+	
+	void setModalState(boolean modal);
 }

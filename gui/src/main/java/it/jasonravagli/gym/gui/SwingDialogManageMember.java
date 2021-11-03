@@ -3,6 +3,7 @@ package it.jasonravagli.gym.gui;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.util.List;
+import java.util.UUID;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -110,6 +111,7 @@ public class SwingDialogManageMember extends JDialog implements DialogManageMemb
 			newMember.setSurname(textFieldSurname.getText().trim());
 			newMember.setDateOfBirth(datePickerBirth.getDate());
 			if (member == null) {
+				newMember.setId(UUID.randomUUID());
 				controller.addMember(newMember);
 			} else {
 				newMember.setId(member.getId());
@@ -188,7 +190,7 @@ public class SwingDialogManageMember extends JDialog implements DialogManageMemb
 			textFieldSurname.setText(member.getSurname());
 			datePickerBirth.setDate(member.getDateOfBirth());
 		}
-		
+
 		setVisible(true);
 
 		return result;
@@ -196,7 +198,7 @@ public class SwingDialogManageMember extends JDialog implements DialogManageMemb
 
 	@Override
 	public void setModalState(boolean modal) {
-		setModal(true);
+		setModal(modal);
 	}
 
 	@Override

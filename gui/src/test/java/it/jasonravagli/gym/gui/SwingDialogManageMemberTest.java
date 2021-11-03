@@ -17,6 +17,8 @@ import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -35,6 +37,9 @@ public class SwingDialogManageMemberTest extends AssertJSwingJUnitTestCase {
 
 	@Mock
 	private GymController controller;
+	
+	@Captor
+	private ArgumentCaptor<Member> memberCaptor;
 
 	private SwingDialogManageMember dialogManageMember;
 
@@ -125,12 +130,12 @@ public class SwingDialogManageMemberTest extends AssertJSwingJUnitTestCase {
 
 		dialogFixture.button("buttonOk").click();
 
-		Member expectedMember = new Member();
-		expectedMember.setId(null);
-		expectedMember.setName(nameWithLeadingSpaces.trim());
-		expectedMember.setSurname(surnameWithTrailingSpaces.trim());
-		expectedMember.setDateOfBirth(dateOfBirth);
-		verify(controller).addMember(expectedMember);
+		verify(controller).addMember(memberCaptor.capture());
+		Member usedMember = memberCaptor.getValue();
+		assertThat(usedMember.getId()).isNotNull();
+		assertThat(usedMember.getName()).isEqualTo(nameWithLeadingSpaces.trim());
+		assertThat(usedMember.getSurname()).isEqualTo(surnameWithTrailingSpaces.trim());
+		assertThat(usedMember.getDateOfBirth()).isEqualTo(dateOfBirth);
 	}
 
 	@Test
@@ -291,6 +296,19 @@ public class SwingDialogManageMemberTest extends AssertJSwingJUnitTestCase {
 		dialogManageMember.showError(errorMessage);
 
 		dialogFixture.label("labelError").requireText(errorMessage);
+	}
+	
+	@Test
+	public void testSetModalState() {
+		boolean modalState = true;
+		dialogManageMember.setModalState(modalState);
+		
+		assertThat(dialogManageMember.isModal()).isEqualTo(modalState);
+		
+		modalState = false;
+		dialogManageMember.setModalState(modalState);
+		
+		assertThat(dialogManageMember.isModal()).isEqualTo(modalState);
 	}
 
 	private Member createTestMember(String name, String surname, LocalDate dateOfBirth) {

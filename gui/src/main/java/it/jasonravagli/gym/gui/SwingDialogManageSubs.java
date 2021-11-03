@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -20,7 +20,7 @@ import it.jasonravagli.gym.model.Course;
 import it.jasonravagli.gym.model.Member;
 import net.miginfocom.swing.MigLayout;
 
-public class SwingDialogManageSubs extends JFrame implements DialogManageCourse {
+public class SwingDialogManageSubs extends JDialog implements DialogManageCourse {
 
 	private static final long serialVersionUID = 9142481637663905420L;
 	private static final String UNSUPPORTED_OP_MESSAGE = "Operation not supported";
@@ -191,7 +191,7 @@ public class SwingDialogManageSubs extends JFrame implements DialogManageCourse 
 
 		result = DialogResult.CANCEL;
 
-		SwingUtilities.invokeLater(() -> course.getSubscribers().forEach(listModelSubs::addElement));
+		course.getSubscribers().forEach(listModelSubs::addElement);
 		controller.allMembers();
 
 		setVisible(true);
@@ -202,6 +202,11 @@ public class SwingDialogManageSubs extends JFrame implements DialogManageCourse 
 	@Override
 	public void setCourse(Course course) {
 		this.course = course;
+	}
+
+	@Override
+	public void setModalState(boolean modal) {
+		setModal(modal);
 	}
 
 	/*

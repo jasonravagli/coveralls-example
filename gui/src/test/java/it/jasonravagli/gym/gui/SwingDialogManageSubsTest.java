@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.core.matcher.JLabelMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
-import org.assertj.swing.fixture.FrameFixture;
+import org.assertj.swing.fixture.DialogFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.junit.Test;
@@ -34,7 +34,7 @@ public class SwingDialogManageSubsTest extends AssertJSwingJUnitTestCase {
 
 	AutoCloseable autoCloseable;
 
-	private FrameFixture dialogFixture;
+	private DialogFixture dialogFixture;
 
 	@Mock
 	private GymController controller;
@@ -51,7 +51,7 @@ public class SwingDialogManageSubsTest extends AssertJSwingJUnitTestCase {
 			return dialogManageSubs;
 		});
 
-		dialogFixture = new FrameFixture(robot(), dialogManageSubs);
+		dialogFixture = new DialogFixture(robot(), dialogManageSubs);
 		dialogFixture.show();
 	}
 
@@ -241,7 +241,7 @@ public class SwingDialogManageSubsTest extends AssertJSwingJUnitTestCase {
 		dialogManageSubs.setCourse(course);
 		dialogFixture.close();
 
-		dialogManageSubs.showDialog();
+		GuiActionRunner.execute(() -> dialogManageSubs.showDialog());
 
 		assertThat(dialogFixture.list("listSubs").contents()).containsOnly(subscriber1.toString(),
 				subscriber2.toString());
@@ -321,6 +321,19 @@ public class SwingDialogManageSubsTest extends AssertJSwingJUnitTestCase {
 		dialogManageSubs.showError(errorMessage);
 
 		dialogFixture.label("labelError").requireText(errorMessage);
+	}
+
+	@Test
+	public void testSetModalState() {
+		boolean modalState = true;
+		dialogManageSubs.setModalState(modalState);
+
+		assertThat(dialogManageSubs.isModal()).isEqualTo(modalState);
+		
+		modalState = false;
+		dialogManageSubs.setModalState(modalState);
+
+		assertThat(dialogManageSubs.isModal()).isEqualTo(modalState);
 	}
 
 	private Member createTestMember(String name, String surname, LocalDate dateOfBirth) {

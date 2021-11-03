@@ -35,7 +35,7 @@ jobs:
         restore-keys: ${{ runner.os }}-m2-jdk11-
     - name: Build with Maven on TightVNC
       run: >
-        sh execute-on-vnc.sh mvn install -Pcoveralls,pit
+        bash execute-on-vnc.sh mvn install -Pcoveralls,pit
         -DrepoToken=$COVERALLS_TOKEN -DpullRequest=${{ github.event.pull_request.number }}
       working-directory: ${{ env.workdir }}
     - name: Generate JUnit Report

@@ -22,6 +22,7 @@ import org.assertj.swing.fixture.DialogFixture;
 import org.assertj.swing.fixture.FrameFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -42,6 +43,9 @@ import it.jasonravagli.gym.model.Member;
 
 @RunWith(GUITestRunner.class)
 public class GuiIT extends AssertJSwingJUnitTestCase {
+	
+	@Rule
+    public RetryOnUbuntuRule retry = new RetryOnUbuntuRule(5);
 
 	private AutoCloseable autocloseable;
 

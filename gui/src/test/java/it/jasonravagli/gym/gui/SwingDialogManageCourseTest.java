@@ -31,7 +31,7 @@ import it.jasonravagli.gym.model.Member;
 public class SwingDialogManageCourseTest extends AssertJSwingJUnitTestCase {
 
 	@Rule
-	public RetryRule retry = new RetryRule(3);
+	public RetryOnUbuntuRule retry = new RetryOnUbuntuRule(5);
 	
 	private static final String UNSUPPORTED_OP_MESSAGE = "Operation not supported";
 

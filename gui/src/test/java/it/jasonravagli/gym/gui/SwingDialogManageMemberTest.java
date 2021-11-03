@@ -33,7 +33,7 @@ import it.jasonravagli.gym.model.Member;
 public class SwingDialogManageMemberTest extends AssertJSwingJUnitTestCase {
 
 	@Rule
-    public RetryRule retry = new RetryRule(3);
+    public RetryOnUbuntuRule retry = new RetryOnUbuntuRule(5);
 
 	AutoCloseable autoCloseable;
 

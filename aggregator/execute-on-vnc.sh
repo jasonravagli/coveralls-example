@@ -15,11 +15,7 @@ do
   fi
 done
 
-echo "Using first available display :${NEW_DISPLAY}"
-
-OLD_DISPLAY=${DISPLAY}
-vncserver ":${NEW_DISPLAY}" -localhost -geometry 1600x1200 -depth 16
-
+echo "Setting tightvnc password"
 mkdir $HOME/.vnc/
 
 vncpasswd -f > $HOME/.vnc/passwd <<EOF
@@ -28,6 +24,11 @@ vncpasswd -f > $HOME/.vnc/passwd <<EOF
 EOF
 
 chmod 600 $HOME/.vnc/passwd
+
+echo "Using first available display :${NEW_DISPLAY}"
+
+OLD_DISPLAY=${DISPLAY}
+vncserver ":${NEW_DISPLAY}" -localhost -geometry 1600x1200 -depth 16
 
 export DISPLAY=:${NEW_DISPLAY}
 

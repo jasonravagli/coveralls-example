@@ -66,7 +66,7 @@ public class SwingDialogManageCourseTest extends AssertJSwingJUnitTestCase {
 
 			@Override
 			protected boolean isMatching(JDialog dialog) {
-				return "Manage Course".equals(dialog.getTitle()) && dialog.isShowing();
+				return dialog.isShowing();
 			}
 		}).using(robot());
 	}

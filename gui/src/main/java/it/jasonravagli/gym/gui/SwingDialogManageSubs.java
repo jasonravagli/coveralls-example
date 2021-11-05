@@ -19,6 +19,7 @@ import it.jasonravagli.gym.logic.GymController;
 import it.jasonravagli.gym.model.Course;
 import it.jasonravagli.gym.model.Member;
 import net.miginfocom.swing.MigLayout;
+import java.awt.Color;
 
 public class SwingDialogManageSubs extends JDialog implements DialogManageCourse {
 
@@ -44,6 +45,7 @@ public class SwingDialogManageSubs extends JDialog implements DialogManageCourse
 	 * @param controller
 	 */
 	public SwingDialogManageSubs(GymController controller) {
+		setTitle("Manage Subscribers");
 		this.controller = controller;
 		setDefaultCloseOperation(HIDE_ON_CLOSE);
 		setBounds(100, 100, 595, 369);
@@ -110,6 +112,7 @@ public class SwingDialogManageSubs extends JDialog implements DialogManageCourse
 		contentPanel.add(buttonRemoveSub, "cell 2 3");
 
 		labelError = new JLabel(" ");
+		labelError.setForeground(Color.RED);
 		labelError.setName("labelError");
 		contentPanel.add(labelError, "cell 1 5 3 1");
 
@@ -148,8 +151,8 @@ public class SwingDialogManageSubs extends JDialog implements DialogManageCourse
 		members.removeAll(course.getSubscribers());
 
 		SwingUtilities.invokeLater(() -> {
+			listModelOtherMembers.clear();
 			members.forEach(listModelOtherMembers::addElement);
-			course.getSubscribers().forEach(listModelSubs::addElement);
 		});
 	}
 
@@ -191,6 +194,7 @@ public class SwingDialogManageSubs extends JDialog implements DialogManageCourse
 
 		result = DialogResult.CANCEL;
 
+		listModelSubs.clear();
 		course.getSubscribers().forEach(listModelSubs::addElement);
 		controller.allMembers();
 

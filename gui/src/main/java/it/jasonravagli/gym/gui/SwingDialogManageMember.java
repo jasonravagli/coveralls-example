@@ -41,6 +41,7 @@ public class SwingDialogManageMember extends JDialog implements DialogManageMemb
 	private JLabel labelError;
 
 	public SwingDialogManageMember(GymController controller) {
+		setTitle("Manage Member");
 		setDefaultCloseOperation(HIDE_ON_CLOSE);
 		setBounds(100, 100, 465, 300);
 		getContentPane().setLayout(new BorderLayout());

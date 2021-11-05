@@ -1,6 +1,8 @@
 package it.jasonravagli.gym.gui;
 
 import java.awt.Color;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 
 import javax.swing.BoxLayout;
@@ -11,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
@@ -21,9 +24,6 @@ import it.jasonravagli.gym.logic.GymView;
 import it.jasonravagli.gym.model.Course;
 import it.jasonravagli.gym.model.Member;
 import net.miginfocom.swing.MigLayout;
-import javax.swing.ListSelectionModel;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 public class SwingGymView extends JFrame implements GymView {
 
@@ -75,12 +75,12 @@ public class SwingGymView extends JFrame implements GymView {
 		buttonUpdateMember.addActionListener(e -> {
 			controller.setView(dialogManageMember);
 			dialogManageMember.setMember(listMembers.getSelectedValue());
-			
+
 			dialogManageMember.setModalState(true);
 			DialogResult dialogResult = dialogManageMember.showDialog();
 			dialogManageMember.setModalState(false);
 			controller.setView(this);
-			
+
 			if (dialogResult == DialogResult.OK)
 				controller.allMembers();
 		});
@@ -101,12 +101,12 @@ public class SwingGymView extends JFrame implements GymView {
 		buttonAddMember.setName("buttonAddMember");
 		buttonAddMember.addActionListener(e -> {
 			controller.setView(dialogManageMember);
-			
+
 			dialogManageMember.setModalState(true);
 			DialogResult result = dialogManageMember.showDialog();
 			dialogManageMember.setModalState(false);
 			controller.setView(this);
-			
+
 			if (result == DialogResult.OK)
 				controller.allMembers();
 		});
@@ -133,12 +133,12 @@ public class SwingGymView extends JFrame implements GymView {
 		buttonUpdateCourse.addActionListener(e -> {
 			controller.setView(dialogManageCourse);
 			dialogManageCourse.setCourse(listCourses.getSelectedValue());
-			
+
 			dialogManageCourse.setModalState(true);
 			DialogResult dialogResult = dialogManageCourse.showDialog();
 			dialogManageCourse.setModalState(false);
 			controller.setView(this);
-			
+
 			if (dialogResult == DialogResult.OK)
 				controller.allCourses();
 		});
@@ -149,12 +149,12 @@ public class SwingGymView extends JFrame implements GymView {
 		JButton buttonAddCourse = new JButton("Add");
 		buttonAddCourse.addActionListener(e -> {
 			controller.setView(dialogManageCourse);
-			
+
 			dialogManageCourse.setModalState(true);
 			DialogResult result = dialogManageCourse.showDialog();
 			dialogManageCourse.setModalState(false);
 			controller.setView(this);
-			
+
 			if (result == DialogResult.OK)
 				controller.allCourses();
 		});
@@ -165,14 +165,13 @@ public class SwingGymView extends JFrame implements GymView {
 		buttonManageSubs.addActionListener(e -> {
 			controller.setView(dialogManageSubs);
 			dialogManageSubs.setCourse(listCourses.getSelectedValue());
-			
+
 			dialogManageSubs.setModalState(true);
-			DialogResult result = dialogManageSubs.showDialog();
+			dialogManageSubs.showDialog();
 			dialogManageSubs.setModalState(false);
 			controller.setView(this);
-			
-			if (result == DialogResult.OK)
-				controller.allCourses();
+
+			controller.allCourses();
 		});
 		buttonManageSubs.setEnabled(false);
 		buttonManageSubs.setName("buttonManageSubs");
@@ -188,7 +187,7 @@ public class SwingGymView extends JFrame implements GymView {
 		});
 		listCourses.setName("listCourses");
 		panel_1.add(listCourses, "cell 0 1 7 6,grow");
-		
+
 		tabbedPaneMain.addChangeListener(e -> {
 			if (tabbedPaneMain.getSelectedIndex() == 1)
 				controller.allCourses();

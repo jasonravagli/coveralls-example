@@ -18,8 +18,6 @@ jobs:
             java: 8
           - os: macos-11
             java: 8
-          - os: windows-2019
-            java: 8
 
     name: Build with Java ${{ matrix.java }} on ${{ matrix.os }}
     steps:

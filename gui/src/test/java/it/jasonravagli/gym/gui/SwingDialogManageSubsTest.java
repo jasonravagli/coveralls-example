@@ -243,6 +243,9 @@ public class SwingDialogManageSubsTest extends AssertJSwingJUnitTestCase {
 		Member subscriber2 = createTestMember("name-2", "surname-2", LocalDate.of(1996, 4, 30));
 		Course course = createTestCourse("name", Stream.of(subscriber1, subscriber2).collect(Collectors.toSet()));
 		dialogManageSubs.setCourse(course);
+		// Simulate a previously populated list
+		Member oldSub = createTestMember("old-name-1", "old-surname-1", LocalDate.of(1996, 10, 31));
+		GuiActionRunner.execute(() -> dialogManageSubs.getListModelSubs().addElement(oldSub));
 		dialogFixture.close();
 
 		GuiActionRunner.execute(() -> dialogManageSubs.showDialog());
@@ -310,10 +313,12 @@ public class SwingDialogManageSubsTest extends AssertJSwingJUnitTestCase {
 		Member subscriber = createTestMember("name-3", "surname-3", LocalDate.of(1995, 4, 28));
 		dialogManageSubs.getCourse().setSubscribers(Stream.of(subscriber).collect(Collectors.toSet()));
 		List<Member> allMembers = Stream.of(otherMember1, otherMember2, subscriber).collect(Collectors.toList());
-
+		// Simulate a previously populated list
+		Member oldMember = createTestMember("old-name-1", "old-surname-1", LocalDate.of(1996, 10, 31));
+		GuiActionRunner.execute(() -> dialogManageSubs.getListModelOtherMembers().addElement(oldMember));
+		
 		dialogManageSubs.showMembers(allMembers);
 
-		assertThat(dialogFixture.list("listSubs").contents()).containsExactly(subscriber.toString());
 		assertThat(dialogFixture.list("listOtherMembers").contents()).containsExactly(otherMember1.toString(),
 				otherMember2.toString());
 	}

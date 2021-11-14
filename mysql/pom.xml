@@ -1,0 +1,123 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>it.jasonravagli.gym</groupId>
+		<artifactId>parent</artifactId>
+		<version>1.0</version>
+		<relativePath>../parent</relativePath>
+	</parent>
+	<artifactId>mysql</artifactId>
+
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>domain-model</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>logic</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<!-- Bind the PIT goal to the integration-test phase since they have 
+					been used to implement the module classes -->
+				<plugin>
+					<groupId>org.pitest</groupId>
+					<artifactId>pitest-maven</artifactId>
+					<executions>
+						<execution>
+							<id>default-mutation</id>
+							<phase>integration-test</phase>
+							<goals>
+								<goal>mutationCoverage</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<!-- Exclude MySqlRepositoryProvider (it contains no logic and there 
+							are no tests for it) -->
+						<excludedClasses>
+							<param>it.jasonravagli.gym.mysql.MySqlRepositoryProvider</param>
+						</excludedClasses>
+						<!-- Disable the threshold since the module contains only integration 
+							tests and database would not be shut down in case of failures -->
+						<mutationThreshold>0</mutationThreshold>
+					</configuration>
+				</plugin>
+				<!-- Configure JaCoCo to consider lines covered by integration tests -->
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<executions>
+						<execution>
+							<id>prepare-it</id>
+							<goals>
+								<goal>prepare-agent-integration</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>report-it</id>
+							<goals>
+								<goal>report-integration</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+		<plugins>
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<configuration>
+					<images>
+						<image>
+							<name>${docker.image.mysql}</name>
+							<run>
+								<ports>
+									<port>3306:3306</port>
+								</ports>
+								<env>
+									<MYSQL_ROOT_PASSWORD>password</MYSQL_ROOT_PASSWORD>
+									<MYSQL_ROOT_HOST>%</MYSQL_ROOT_HOST>
+									<MYSQL_DATABASE>test</MYSQL_DATABASE>
+								</env>
+								<wait>
+									<time>30000</time>
+								</wait>
+								<log>
+									<enabled>true</enabled>
+									<color>CYAN</color>
+								</log>
+
+								<volumes>
+									<bind>
+										<volume>${path.mysql-scripts.src}:/docker-entrypoint-initdb.d</volume>
+									</bind>
+								</volumes>
+							</run>
+						</image>
+					</images>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

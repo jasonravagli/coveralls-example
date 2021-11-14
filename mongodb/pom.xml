@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>it.jasonravagli.gym</groupId>
 		<artifactId>parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>1.0</version>
 		<relativePath>../parent</relativePath>
 	</parent>
 	<artifactId>mongodb</artifactId>
@@ -23,18 +23,42 @@
 			<groupId>org.mongodb</groupId>
 			<artifactId>mongo-java-driver</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
 		<pluginManagement>
 			<plugins>
-				<!-- Exclude the module from PIT execution (it contains only integration 
-					tests) -->
+				<!-- Bind the PIT goal to the integration-test phase since they have 
+					been used to implement the module classes -->
 				<plugin>
 					<groupId>org.pitest</groupId>
 					<artifactId>pitest-maven</artifactId>
+					<executions>
+						<execution>
+							<id>default-mutation</id>
+							<phase>integration-test</phase>
+							<goals>
+								<goal>mutationCoverage</goal>
+							</goals>
+						</execution>
+					</executions>
 					<configuration>
-						<skip>true</skip>
+						<!-- Exclude MongoRepositoryProvider (it contains no logic and there 
+							are no tests for it) -->
+						<excludedClasses>
+							<param>it.jasonravagli.gym.mongodb.MongoRepositoryProvider</param>
+						</excludedClasses>
+						<!-- Disable the threshold since the module contains only integration 
+							tests and database would not be shut down in case of failures -->
+						<mutationThreshold>0</mutationThreshold>
 					</configuration>
 				</plugin>
 				<!-- Configure JaCoCo to consider lines covered by integration tests -->
@@ -59,7 +83,6 @@
 			</plugins>
 		</pluginManagement>
 
-
 		<plugins>
 			<plugin>
 				<groupId>io.fabric8</groupId>
@@ -70,38 +93,14 @@
 							<name>${docker.image.mongo}</name>
 							<run>
 								<ports>
-									<port>mongo.mapped.port:27017</port>
+									<port>27017:27017</port>
 								</ports>
+								<wait>
+									<time>60000</time>
+								</wait>
 							</run>
 						</image>
 					</images>
-				</configuration>
-				<executions>
-					<execution>
-						<id>docker-start</id>
-						<phase>pre-integration-test</phase>
-						<goals>
-							<goal>start</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>docker-stop</id>
-						<phase>post-integration-test</phase>
-						<goals>
-							<goal>stop</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-failsafe-plugin</artifactId>
-				<!-- Make the started MongoDB public port available to the integrations 
-					tests -->
-				<configuration>
-					<systemPropertyVariables>
-						<mongo.port>${mongo.mapped.port}</mongo.port>
-					</systemPropertyVariables>
 				</configuration>
 			</plugin>
 		</plugins>

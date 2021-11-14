@@ -190,7 +190,7 @@ public class GuiIT extends AssertJSwingJUnitTestCase {
 
 	@Test
 	@GUITest
-	public void testAddMemberWhenInsertRaiseError() {
+	public void testAddMemberWhenInsertRaiseError() throws Exception {
 		String name = "name";
 		String surname = "surname";
 		LocalDate dateOfBirth = LocalDate.of(1996, 10, 31);
@@ -266,7 +266,7 @@ public class GuiIT extends AssertJSwingJUnitTestCase {
 
 	@Test
 	@GUITest
-	public void testAddCourseWhenInsertRaiseError() {
+	public void testAddCourseWhenInsertRaiseError() throws Exception {
 		String name = "course";
 		Course existingCourse = createTestCourse(name, Collections.emptySet());
 		when(courseRepository.findById(any())).thenReturn(existingCourse);

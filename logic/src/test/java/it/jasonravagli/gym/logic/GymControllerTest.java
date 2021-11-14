@@ -62,7 +62,7 @@ public class GymControllerTest {
 	}
 
 	@Test
-	public void testAllMembersWhenEverythingOk() {
+	public void testAllMembersWhenEverythingOk() throws Exception {
 		List<Member> members = Collections.singletonList(new Member());
 		when(memberRepository.findAll()).thenReturn(members);
 		setupTransactionManagerToExecuteCode();
@@ -85,7 +85,7 @@ public class GymControllerTest {
 	}
 
 	@Test
-	public void testAllCoursesWhenEverythingOk() {
+	public void testAllCoursesWhenEverythingOk() throws Exception {
 		List<Course> courses = Collections.singletonList(new Course());
 		when(courseRepository.findAll()).thenReturn(courses);
 		setupTransactionManagerToExecuteCode();
@@ -108,7 +108,7 @@ public class GymControllerTest {
 	}
 
 	@Test
-	public void testAddMemberWhenMemberDoesNotExist() {
+	public void testAddMemberWhenMemberDoesNotExist() throws Exception {
 		UUID idMember = UUID.randomUUID();
 		Member member = new Member();
 		member.setId(idMember);
@@ -124,7 +124,7 @@ public class GymControllerTest {
 	}
 
 	@Test
-	public void testAddMemberWhenMemberAlreadyExists() {
+	public void testAddMemberWhenMemberAlreadyExists() throws Exception {
 		UUID existingId = UUID.randomUUID();
 		Member existingMember = new Member();
 		existingMember.setId(existingId);
@@ -153,7 +153,7 @@ public class GymControllerTest {
 	}
 
 	@Test
-	public void testDeleteMemberWhenMemberExists() {
+	public void testDeleteMemberWhenMemberExists() throws Exception {
 		UUID idMember = UUID.randomUUID();
 		Member member = new Member();
 		member.setId(idMember);
@@ -169,7 +169,7 @@ public class GymControllerTest {
 	}
 
 	@Test
-	public void testDeleteMemberWhenMemberDoesNotExist() {
+	public void testDeleteMemberWhenMemberDoesNotExist() throws Exception {
 		UUID idMember = UUID.randomUUID();
 		Member member = new Member();
 		member.setId(idMember);
@@ -194,7 +194,7 @@ public class GymControllerTest {
 	}
 
 	@Test
-	public void testUpdateMemberWhenMemberExists() {
+	public void testUpdateMemberWhenMemberExists() throws Exception {
 		UUID idMember = UUID.randomUUID();
 		Member existingMember = new Member();
 		existingMember.setId(idMember);
@@ -212,7 +212,7 @@ public class GymControllerTest {
 	}
 
 	@Test
-	public void testUpdateMemberWhenMemberDoesNotExist() {
+	public void testUpdateMemberWhenMemberDoesNotExist() throws Exception {
 		UUID idMember = UUID.randomUUID();
 		Member updatedMember = new Member();
 		updatedMember.setId(idMember);
@@ -238,7 +238,7 @@ public class GymControllerTest {
 	}
 
 	@Test
-	public void testAddCourseWhenCourseDoesNotExist() {
+	public void testAddCourseWhenCourseDoesNotExist() throws Exception {
 		UUID idCourse = UUID.randomUUID();
 		Course course = new Course();
 		course.setId(idCourse);
@@ -254,7 +254,7 @@ public class GymControllerTest {
 	}
 
 	@Test
-	public void testAddCourseWhenCourseAlreadyExists() {
+	public void testAddCourseWhenCourseAlreadyExists() throws Exception {
 		UUID existingId = UUID.randomUUID();
 		Course existingCourse = new Course();
 		existingCourse.setId(existingId);
@@ -283,7 +283,7 @@ public class GymControllerTest {
 	}
 
 	@Test
-	public void testDeleteCourseWhenCourseExists() {
+	public void testDeleteCourseWhenCourseExists() throws Exception {
 		UUID idCourse = UUID.randomUUID();
 		Course course = new Course();
 		course.setId(idCourse);
@@ -299,7 +299,7 @@ public class GymControllerTest {
 	}
 
 	@Test
-	public void testDeleteCourseWhenCourseDoesNotExists() {
+	public void testDeleteCourseWhenCourseDoesNotExists() throws Exception {
 		UUID idCourse = UUID.randomUUID();
 		Course course = new Course();
 		course.setId(idCourse);
@@ -325,7 +325,7 @@ public class GymControllerTest {
 	}
 
 	@Test
-	public void testUpdateCourseWhenCourseExists() {
+	public void testUpdateCourseWhenCourseExists() throws Exception {
 		UUID existingId = UUID.randomUUID();
 		Course existingCourse = new Course();
 		existingCourse.setId(existingId);
@@ -344,7 +344,7 @@ public class GymControllerTest {
 	}
 
 	@Test
-	public void testUpdateCourseWhenCourseDoesNotExist() {
+	public void testUpdateCourseWhenCourseDoesNotExist() throws Exception {
 		UUID idCourse = UUID.randomUUID();
 		Course updatedCourse = new Course();
 		updatedCourse.setId(idCourse);

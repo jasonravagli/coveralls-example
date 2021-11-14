@@ -25,6 +25,10 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>gui</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>mysql</artifactId>
+		</dependency>
 	</dependencies>
 
 	<profiles>
@@ -86,6 +90,7 @@
 								<sourceDirectory>${project.basedir}/../logic/src/main/java</sourceDirectory>
 								<sourceDirectory>${project.basedir}/../mongodb/src/main/java</sourceDirectory>
 								<sourceDirectory>${project.basedir}/../gui/src/main/java</sourceDirectory>
+								<sourceDirectory>${project.basedir}/../mysql/src/main/java</sourceDirectory>
 							</sourceDirectories>
 						</configuration>
 					</plugin>

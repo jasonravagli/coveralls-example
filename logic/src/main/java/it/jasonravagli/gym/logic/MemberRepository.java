@@ -7,14 +7,14 @@ import it.jasonravagli.gym.model.Member;
 
 public interface MemberRepository {
 
-	List<Member> findAll();
+	List<Member> findAll() throws Exception;
 
-	void save(Member member);
+	void save(Member member) throws Exception;
 
-	Member findById(UUID id);
+	Member findById(UUID id) throws Exception;
 
-	void deleteById(UUID id);
+	void deleteById(UUID id) throws Exception;
 
-	void update(Member member);
+	void update(Member member) throws Exception;
 
 }

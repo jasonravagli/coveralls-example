@@ -3,21 +3,15 @@ package it.jasonravagli.gym.gui;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
-import static org.awaitility.Awaitility.*;
 
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-
-import javax.swing.JDialog;
 
 import org.assertj.swing.annotation.GUITest;
-import org.assertj.swing.core.GenericTypeMatcher;
 import org.assertj.swing.core.matcher.JLabelMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
-import org.assertj.swing.finder.WindowFinder;
 import org.assertj.swing.fixture.DialogFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
@@ -35,6 +29,9 @@ import it.jasonravagli.gym.model.Member;
 
 @RunWith(GUITestRunner.class)
 public class SwingDialogManageCourseTest extends AssertJSwingJUnitTestCase {
+
+	@Rule
+	public RetryOnUbuntuRule retry = new RetryOnUbuntuRule(5);
 	
 	private static final String UNSUPPORTED_OP_MESSAGE = "Operation not supported";
 
@@ -59,16 +56,8 @@ public class SwingDialogManageCourseTest extends AssertJSwingJUnitTestCase {
 			return dialogManageCourse;
 		});
 
-		dialogManageCourse.setVisible(true);
-		// Wait at most 5 seconds until dialog is completely shown before connecting to it with AssertJ Swing
-		await().atMost(5, TimeUnit.SECONDS).until(() -> dialogManageCourse.isShowing());
-		dialogFixture = WindowFinder.findDialog(new GenericTypeMatcher<JDialog>(JDialog.class) {
-
-			@Override
-			protected boolean isMatching(JDialog dialog) {
-				return dialog.isShowing();
-			}
-		}).using(robot());
+		dialogFixture = new DialogFixture(robot(), dialogManageCourse);
+		dialogFixture.show();
 	}
 
 	@Override

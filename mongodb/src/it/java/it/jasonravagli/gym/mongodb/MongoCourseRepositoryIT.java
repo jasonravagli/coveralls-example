@@ -36,9 +36,7 @@ public class MongoCourseRepositoryIT {
 	private static final String MONGO_HOST = "localhost";
 	private static final String MONGO_DATABASE = "test";
 	private static final String MONGO_COLLECTION = "courses";
-
-	// Get the docker container mapped port
-	private static int mongoPort = Integer.parseInt(System.getProperty("mongo.port", "27017"));
+	private static final int MONGO_PORT = 27017;
 
 	private MongoClient client;
 	private ClientSession clientSession;
@@ -51,7 +49,7 @@ public class MongoCourseRepositoryIT {
 
 	@Before
 	public void setup() {
-		client = new MongoClient(new ServerAddress(MONGO_HOST, mongoPort));
+		client = new MongoClient(new ServerAddress(MONGO_HOST, MONGO_PORT));
 		clientSession = client.startSession();
 		MongoDatabase database = client.getDatabase(MONGO_DATABASE);
 		// Clean the database

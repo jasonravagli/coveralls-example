@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>it.jasonravagli.gym</groupId>
 	<artifactId>parent</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<packaging>pom</packaging>
 
 	<properties>
@@ -21,8 +21,13 @@
 		<lgooddatepicker.version>11.2.1</lgooddatepicker.version>
 		<apache-commons-lang.commons>3.12.0</apache-commons-lang.commons>
 		<log4j.version>2.14.1</log4j.version>
+		<picocli.version>4.6.1</picocli.version>
+		<mysql-connector.version>8.0.27</mysql-connector.version>
 
-		<docker.image.mongo>mongo:5.0.3</docker.image.mongo>
+		<docker.image.mongo>candis/mongo-replica-set:0.0.2</docker.image.mongo>
+		<docker.image.mysql>mysql/mysql-server:8.0.27</docker.image.mysql>
+		
+		<path.mysql-scripts.src>${project.basedir}/../docker/mysql-scripts</path.mysql-scripts.src>
 	</properties>
 
 
@@ -48,6 +53,11 @@
 				<artifactId>gui</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>mysql</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>org.mongodb</groupId>
@@ -63,6 +73,16 @@
 				<groupId>com.github.lgooddatepicker</groupId>
 				<artifactId>LGoodDatePicker</artifactId>
 				<version>${lgooddatepicker.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>info.picocli</groupId>
+				<artifactId>picocli</artifactId>
+				<version>${picocli.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>mysql</groupId>
+				<artifactId>mysql-connector-java</artifactId>
+				<version>${mysql-connector.version}</version>
 			</dependency>
 
 
@@ -142,10 +162,26 @@
 					<version>2.22.1</version>
 					<executions>
 						<execution>
+							<id>default-it</id>
 							<goals>
 								<goal>integration-test</goal>
 								<goal>verify</goal>
 							</goals>
+						</execution>
+						<execution>
+							<id>e2e-tests</id>
+							<goals>
+								<goal>integration-test</goal>
+								<goal>verify</goal>
+							</goals>
+							<configuration>
+								<excludes>
+									<exclude>**/*IT.java</exclude>
+								</excludes>
+								<includes>
+									<include>**/*E2E.java</include>
+								</includes>
+							</configuration>
 						</execution>
 					</executions>
 				</plugin>
@@ -170,6 +206,9 @@
 							<exclude>**/TransactionException.*</exclude>
 							<exclude>**/MongoRepositoryProvider.*</exclude>
 							<exclude>**/gui/**/SimpleDocumentListener.*</exclude>
+							<exclude>**/app-mongo/**/MongoGymApp.*</exclude>
+							<exclude>**/mysql/**/MySqlRepositoryProvider.*</exclude>
+							<exclude>**/app-mysql/**/MySqlGymApp.*</exclude>
 						</excludes>
 					</configuration>
 				</plugin>
@@ -193,19 +232,10 @@
 					<groupId>org.pitest</groupId>
 					<artifactId>pitest-maven</artifactId>
 					<version>1.7.2</version>
-					<executions>
-						<execution>
-							<phase>test</phase>
-							<goals>
-								<goal>mutationCoverage</goal>
-							</goals>
-						</execution>
-					</executions>
 					<configuration>
 						<mutators>
 							<mutator>STRONGER</mutator>
 						</mutators>
-						<mutationThreshold>100</mutationThreshold>
 					</configuration>
 				</plugin>
 				<!-- BUILD HELPER PLUGIN -->
@@ -223,6 +253,7 @@
 							<configuration>
 								<sources>
 									<source>src/it/java</source>
+									<source>src/e2e/java</source>
 								</sources>
 							</configuration>
 						</execution>
@@ -233,6 +264,22 @@
 					<groupId>io.fabric8</groupId>
 					<artifactId>docker-maven-plugin</artifactId>
 					<version>0.34.1</version>
+					<executions>
+						<execution>
+							<id>docker-start</id>
+							<phase>pre-integration-test</phase>
+							<goals>
+								<goal>start</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>docker-stop</id>
+							<phase>post-integration-test</phase>
+							<goals>
+								<goal>stop</goal>
+							</goals>
+						</execution>
+					</executions>
 				</plugin>
 			</plugins>
 		</pluginManagement>

@@ -1,8 +1,8 @@
 package it.jasonravagli.gym.logic;
 
-import java.util.function.Function;
-
 @FunctionalInterface
-public interface TransactionCode<T> extends Function<RepositoryProvider, T> {
-	
+public interface TransactionCode<T> {
+
+	public T apply(RepositoryProvider provider) throws Exception;
+
 }

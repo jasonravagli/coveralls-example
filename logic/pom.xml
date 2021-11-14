@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>it.jasonravagli.gym</groupId>
 		<artifactId>parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>1.0</version>
 		<relativePath>../parent</relativePath>
 	</parent>
 	<artifactId>logic</artifactId>
@@ -23,9 +23,20 @@
 				<plugin>
 					<groupId>org.pitest</groupId>
 					<artifactId>pitest-maven</artifactId>
-					<!-- Exclude RepositoryProvider from mutation since it contains no logic -->
+					<executions>
+						<execution>
+							<id>default-mutation</id>
+							<phase>test</phase>
+							<goals>
+								<goal>mutationCoverage</goal>
+							</goals>
+						</execution>
+					</executions>
 					<configuration>
+						<!-- Exclude RepositoryProvider from mutation since it contains no 
+							logic -->
 						<excludedClasses>it.jasonravagli.gym.logic.RepositoryProvider</excludedClasses>
+						<mutationThreshold>100</mutationThreshold>
 					</configuration>
 				</plugin>
 			</plugins>

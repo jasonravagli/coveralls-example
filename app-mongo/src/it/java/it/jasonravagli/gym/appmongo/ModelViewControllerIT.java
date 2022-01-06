@@ -77,7 +77,7 @@ public class ModelViewControllerIT extends AssertJSwingJUnitTestCase {
 		MongoCollection<Document> memberCollection = database.getCollection(MONGO_MEMBER_COLLECTION);
 		MongoCollection<Document> courseCollection = database.getCollection(MONGO_COURSE_COLLECTION);
 
-		memberRepository = new MongoMemberRepository(memberCollection, clientSession);
+		memberRepository = new MongoMemberRepository(memberCollection, courseCollection, clientSession);
 		courseRepository = new MongoCourseRepository(courseCollection, clientSession);
 
 		// Empty the database using the repositories
@@ -164,7 +164,7 @@ public class ModelViewControllerIT extends AssertJSwingJUnitTestCase {
 		updatedMember.setDateOfBirth(updatedDateOfBirth);
 		assertThat(memberRepository.findById(member.getId())).isEqualTo(updatedMember);
 	}
-	
+
 	@Test
 	@GUITest
 	public void testUpdateMemberWhenOperationCanceled() {
@@ -232,7 +232,7 @@ public class ModelViewControllerIT extends AssertJSwingJUnitTestCase {
 		updatedCourse.setSubscribers(Collections.emptySet());
 		assertThat(courseRepository.findById(course.getId())).isEqualTo(updatedCourse);
 	}
-	
+
 	@Test
 	public void testUpdateCourseWhenOperationCanceled() {
 		Course course = createTestCourse("course 1", Collections.emptySet());
@@ -278,7 +278,7 @@ public class ModelViewControllerIT extends AssertJSwingJUnitTestCase {
 		Course updatedCourse = courseRepository.findById(course.getId());
 		assertThat(updatedCourse.getSubscribers()).containsExactly(member);
 	}
-	
+
 	@Test
 	@GUITest
 	public void testManageSubsWhenOperationCanceled() {

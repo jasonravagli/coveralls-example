@@ -51,7 +51,7 @@ public class MySqlGymApp implements Callable<Void> {
 	@Override
 	public Void call() throws Exception {
 		if(inputPassword) {
-			System.out.print("User password: ");
+			LOGGER.info("User password: ");
 			mysqlPassword = new String(System.console().readPassword());
 		}
 		EventQueue.invokeLater(() -> {

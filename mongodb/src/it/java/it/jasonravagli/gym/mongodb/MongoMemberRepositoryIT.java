@@ -5,8 +5,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -26,22 +28,27 @@ import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
+import it.jasonravagli.gym.model.Course;
 import it.jasonravagli.gym.model.Member;
 
 public class MongoMemberRepositoryIT {
 
 	private static final String MONGO_HOST = "localhost";
 	private static final String MONGO_DATABASE = "test";
-	private static final String MONGO_COLLECTION = "members";
+	private static final String MONGO_MEMBER_COLLECTION = "members";
+	private static final String MONGO_COURSE_COLLECTION = "courses";
 	private static final int MONGO_PORT = 27017;
 
 	private MongoClient client;
 	private ClientSession clientSession;
-	
+
 	private AutoCloseable closeable;
 
 	@Spy
 	private MongoCollection<Document> memberCollection;
+
+	@Spy
+	private MongoCollection<Document> courseCollection;
 
 	private MongoMemberRepository repository;
 
@@ -52,10 +59,11 @@ public class MongoMemberRepositoryIT {
 		MongoDatabase database = client.getDatabase(MONGO_DATABASE);
 		// Clean the database
 		database.drop();
-		memberCollection = database.getCollection(MONGO_COLLECTION);
+		memberCollection = database.getCollection(MONGO_MEMBER_COLLECTION);
+		courseCollection = database.getCollection(MONGO_COURSE_COLLECTION);
 		closeable = MockitoAnnotations.openMocks(this);
 
-		repository = new MongoMemberRepository(memberCollection, clientSession);
+		repository = new MongoMemberRepository(memberCollection, courseCollection, clientSession);
 	}
 
 	@After
@@ -149,6 +157,22 @@ public class MongoMemberRepositoryIT {
 	}
 
 	@Test
+	public void testDeleteByIdShouldDeleteMemberSubscriptionsUsingClientSession() throws SQLException {
+		Member member1 = createTestMember("test-name-1", "test-surname-1", LocalDate.of(1996, 4, 30));
+		Member member2 = createTestMember("test-name-2", "test-surname-2", LocalDate.of(1996, 10, 31));
+		memberCollection.insertMany(Stream.of(convertMemberToDbDocument(member1), convertMemberToDbDocument(member2))
+				.collect(Collectors.toList()));
+		Course existingCourse = createTestCourse("course-1", Stream.of(member1, member2).collect(Collectors.toSet()));
+		courseCollection.insertOne(convertCourseToDbDocument(existingCourse));
+
+		repository.deleteById(member2.getId());
+
+		Course retrievedCourse = readAllCoursesFromDatabase().get(0);
+		assertThat(retrievedCourse.getSubscribers()).containsExactly(member1);
+		verify(courseCollection).replaceOne(eq(clientSession), any(Bson.class), any(Document.class));
+	}
+
+	@Test
 	public void testUpdate() {
 		Member existingMember = createTestMember("test-name", "test-surname", LocalDate.of(1995, 4, 28));
 		memberCollection.insertOne(convertMemberToDbDocument(existingMember));
@@ -158,7 +182,7 @@ public class MongoMemberRepositoryIT {
 
 		repository.update(updatedMember);
 
-		assertThat(readAllMembersFromDatabase()).containsExactly(updatedMember);		
+		assertThat(readAllMembersFromDatabase()).containsExactly(updatedMember);
 	}
 
 	@Test
@@ -169,7 +193,7 @@ public class MongoMemberRepositoryIT {
 
 		verify(memberCollection).replaceOne(eq(clientSession), any(Bson.class), any(Document.class));
 	}
-	
+
 	// ----- Utility methods -----
 
 	private Member createTestMember(String name, String surname, LocalDate dateOfBirth) {
@@ -182,9 +206,18 @@ public class MongoMemberRepositoryIT {
 		return member;
 	}
 
-	private List<Member> readAllMembersFromDatabase() {
-		return StreamSupport.stream(memberCollection.find().spliterator(), false).map(this::convertDocumentToMember)
-				.collect(Collectors.toList());
+	private Course createTestCourse(String name, Set<Member> subscribers) {
+		Course course = new Course();
+		course.setId(UUID.randomUUID());
+		course.setName(name);
+		course.setSubscribers(subscribers);
+
+		return course;
+	}
+
+	private Document convertCourseToDbDocument(Course course) {
+		return new Document().append("id", course.getId()).append("name", course.getName()).append("subscribers",
+				course.getSubscribers().stream().map(this::convertMemberToDbDocument).collect(Collectors.toList()));
 	}
 
 	private Document convertMemberToDbDocument(Member member) {
@@ -200,5 +233,25 @@ public class MongoMemberRepositoryIT {
 		member.setDateOfBirth(LocalDate.parse(doc.getString("dateOfBirth")));
 
 		return member;
+	}
+
+	private Course convertDocumentToCourse(Document doc) {
+		Course course = new Course();
+		course.setId((UUID) doc.get("id"));
+		course.setName(doc.getString("name"));
+		List<Document> listMemberDocs = doc.getList("subscribers", Document.class);
+		course.setSubscribers(listMemberDocs.stream().map(this::convertDocumentToMember).collect(Collectors.toSet()));
+
+		return course;
+	}
+
+	private List<Member> readAllMembersFromDatabase() {
+		return StreamSupport.stream(memberCollection.find().spliterator(), false).map(this::convertDocumentToMember)
+				.collect(Collectors.toList());
+	}
+
+	private List<Course> readAllCoursesFromDatabase() {
+		return StreamSupport.stream(courseCollection.find().spliterator(), false).map(this::convertDocumentToCourse)
+				.collect(Collectors.toList());
 	}
 }

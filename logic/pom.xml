@@ -33,9 +33,6 @@
 						</execution>
 					</executions>
 					<configuration>
-						<!-- Exclude RepositoryProvider from mutation since it contains no 
-							logic -->
-						<excludedClasses>it.jasonravagli.gym.logic.RepositoryProvider</excludedClasses>
 						<mutationThreshold>100</mutationThreshold>
 					</configuration>
 				</plugin>

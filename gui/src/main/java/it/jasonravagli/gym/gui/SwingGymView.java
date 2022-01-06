@@ -79,6 +79,7 @@ public class SwingGymView extends JFrame implements GymView {
 			dialogManageMember.setModalState(true);
 			DialogResult dialogResult = dialogManageMember.showDialog();
 			dialogManageMember.setModalState(false);
+			dialogManageMember.setMember(null);
 			controller.setView(this);
 
 			if (dialogResult == DialogResult.OK)
@@ -137,6 +138,7 @@ public class SwingGymView extends JFrame implements GymView {
 			dialogManageCourse.setModalState(true);
 			DialogResult dialogResult = dialogManageCourse.showDialog();
 			dialogManageCourse.setModalState(false);
+			dialogManageCourse.setCourse(null);
 			controller.setView(this);
 
 			if (dialogResult == DialogResult.OK)

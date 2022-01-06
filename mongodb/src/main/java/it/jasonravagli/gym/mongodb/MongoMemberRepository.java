@@ -9,6 +9,7 @@ import java.util.stream.StreamSupport;
 import org.bson.Document;
 
 import com.mongodb.client.ClientSession;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 
@@ -19,9 +20,12 @@ public class MongoMemberRepository implements MemberRepository {
 
 	private ClientSession clientSession;
 	private MongoCollection<Document> memberCollection;
+	private MongoCollection<Document> courseCollection;
 
-	public MongoMemberRepository(MongoCollection<Document> memberCollection, ClientSession clientSession) {
+	public MongoMemberRepository(MongoCollection<Document> memberCollection, MongoCollection<Document> courseCollection,
+			ClientSession clientSession) {
 		this.memberCollection = memberCollection;
+		this.courseCollection = courseCollection;
 		this.clientSession = clientSession;
 	}
 
@@ -49,6 +53,13 @@ public class MongoMemberRepository implements MemberRepository {
 	@Override
 	public void deleteById(UUID id) {
 		memberCollection.deleteOne(clientSession, Filters.eq("id", id));
+		FindIterable<Document> iterableCourses = courseCollection.find(clientSession, Filters.eq("subscribers.id", id));
+		for (Document doc : iterableCourses) {
+			List<Document> subs = doc.getList("subscribers", Document.class);
+			subs.removeIf(s -> id.equals(s.get("id", UUID.class)));
+			doc.replace("subscribers", subs);
+			courseCollection.replaceOne(clientSession, Filters.eq("id", doc.get("id")), doc);
+		}
 	}
 
 	@Override

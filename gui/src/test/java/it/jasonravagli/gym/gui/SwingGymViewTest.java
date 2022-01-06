@@ -236,6 +236,26 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 	@Test
 	@GUITest
+	public void testButtonUpdateMemberWhenDialogClosesShouldResetDialogMember() {
+		resetControllerMockInvocations();
+		JListFixture listMembers = window.list("listMembers");
+		Member member = createTestMember("test-name", "test-surname", LocalDate.of(1996, 4, 30));
+		GuiActionRunner.execute(() -> {
+			swingGymView.getListModelMembers().addElement(member);
+		});
+		listMembers.selectItem(0);
+		when(dialogManageMember.showDialog()).thenReturn(DialogResult.OK);
+
+		window.button("buttonUpdateMember").click();
+
+		InOrder inOrder = Mockito.inOrder(dialogManageMember);
+		inOrder.verify(dialogManageMember).setMember(member);
+		inOrder.verify(dialogManageMember).showDialog();
+		inOrder.verify(dialogManageMember).setMember(null);
+	}
+
+	@Test
+	@GUITest
 	public void testButtonDeleteMemberWhenClickedShouldCallControllerMethod() {
 		resetControllerMockInvocations();
 		JListFixture listMembers = window.list("listMembers");
@@ -359,6 +379,26 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 
 	@Test
 	@GUITest
+	public void testButtonUpdateCourseWhenDialogClosesShouldResetDialogCourse() {
+		window.tabbedPane("tabbedPaneMain").selectTab("Courses");
+		resetControllerMockInvocations();
+		Course course = createTestCourse("test-name");
+		GuiActionRunner.execute(() -> {
+			swingGymView.getListModelCourses().addElement(course);
+		});
+		window.list("listCourses").selectItem(0);
+		when(dialogManageCourse.showDialog()).thenReturn(DialogResult.OK);
+
+		window.button("buttonUpdateCourse").click();
+
+		InOrder inOrder = Mockito.inOrder(dialogManageCourse);
+		inOrder.verify(dialogManageCourse).setCourse(course);
+		inOrder.verify(dialogManageCourse).showDialog();
+		inOrder.verify(dialogManageCourse).setCourse(null);
+	}
+
+	@Test
+	@GUITest
 	public void testButtonDeleteCourseWhenClickedShouldCallControllerMethod() {
 		window.tabbedPane("tabbedPaneMain").selectTab("Courses");
 		resetControllerMockInvocations();
@@ -398,7 +438,7 @@ public class SwingGymViewTest extends AssertJSwingJUnitTestCase {
 		inOrder.verify(dialogManageSubs).setModalState(true);
 		inOrder.verify(dialogManageSubs).showDialog();
 	}
-	
+
 	@Test
 	@GUITest
 	public void testButtonManageSubsWhenDialogClosesShouldReloadAllCourses() {

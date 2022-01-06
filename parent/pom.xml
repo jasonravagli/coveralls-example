@@ -206,9 +206,9 @@
 							<exclude>**/TransactionException.*</exclude>
 							<exclude>**/MongoRepositoryProvider.*</exclude>
 							<exclude>**/gui/**/SimpleDocumentListener.*</exclude>
-							<exclude>**/app-mongo/**/MongoGymApp.*</exclude>
+							<exclude>**/MongoGymApp.*</exclude>
 							<exclude>**/mysql/**/MySqlRepositoryProvider.*</exclude>
-							<exclude>**/app-mysql/**/MySqlGymApp.*</exclude>
+							<exclude>**/MySqlGymApp.*</exclude>
 						</excludes>
 					</configuration>
 				</plugin>

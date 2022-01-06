@@ -65,7 +65,7 @@ public class MongoGymApp implements Callable<Void> {
 				MongoCollection<Document> memberCollection = database.getCollection(MONGO_MEMBER_COLLECTION);
 				MongoCollection<Document> courseCollection = database.getCollection(MONGO_COURSE_COLLECTION);
 
-				MongoMemberRepository memberRepository = new MongoMemberRepository(memberCollection, clientSession);
+				MongoMemberRepository memberRepository = new MongoMemberRepository(memberCollection, courseCollection, clientSession);
 				MongoCourseRepository courseRepository = new MongoCourseRepository(courseCollection, clientSession);
 				MongoRepositoryProvider repositoryProvider = new MongoRepositoryProvider(memberRepository,
 						courseRepository);
